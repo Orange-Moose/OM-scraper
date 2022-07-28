@@ -16,11 +16,7 @@ let scraperConfig = {
   interval: 30
 };
 
-const updateConfig = (req, res) => {
-  console.log(req.body);
-  if(val && typeof(val) == 'number')  scraperConfig.interval = value;
-  return;
-};
+
 
 
 
@@ -138,4 +134,4 @@ setTimeout(() => {
 }, 1000 * scraperConfig.interval);
 
 
-export { runNewCheck, state };
+export { scraperConfig, runNewCheck, state };

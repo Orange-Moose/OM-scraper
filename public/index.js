@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 
 $(document).ready(function () {
   
@@ -21,20 +21,20 @@ $(document).ready(function () {
   };
 
   // Update config parameters and re-run scraper
-  const updateConfig = async () => {
-    const delay = $("input[name='timer-input']").val();
-    console.log(delay);
-
+  const updateConfig = () => {
+    $("input[type='text']").css('border-color', 'rgba(199, 196, 196, 0.8)');
+    const delay = parseInt($("input[name='timer-input']").val());
+    console.log(`Delay: ${delay},  type: ${typeof(delay)}, les than 100k: ${delay <= 100000}`);
+    
     // Verify input to be number and less than 7 chars
-    if (delay && typeof (val) == 'number' && delay <= 100000) {
+    if (delay && typeof(delay) == 'number' && delay <= 100000) {
       axios
       .post('/update-config', { delay })
       .then(res => console.log(res))
       .catch(err => console.log(err));
     } else {
-      $("input[name='timer-input']").addClass('invalid');
+      $("input[type='text']").css('border-color', 'rgb(248, 131, 121)');
     }
-
 
   };
 

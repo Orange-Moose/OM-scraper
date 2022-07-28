@@ -7,12 +7,13 @@
   <title>Bilauppbod Scraper</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
   <h3 classs="title">Web Scraper</h3>
   <button class="status-btn" type="button">Get status</button> 
   <button class="config-btn" type="button">Reset timer</button>
-  <input type="text" id="timer-input" name="timer-input" title="Enter amount of seconds" pattern="[0-9]{6}" value="90">
+  <input type="text" id="timer-input"  class= "invalid" name="timer-input" title="Enter amount of seconds" pattern="[0-9]{6}" value="90">
 
   <p><strong>Last check data:</strong></p>
   <div class="check-data">
@@ -23,7 +24,7 @@
        <%= state.newUrls.join(' | ') %></p>
   </div>
   
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  
   <script type="module" src="index.js"></script>
 </body>
 </html>

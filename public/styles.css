@@ -54,6 +54,6 @@ input[name='timer-input'] {
 }
 
 .invalid {
-  border-color: var(--red);
+  background: var(--red);
 }
 
