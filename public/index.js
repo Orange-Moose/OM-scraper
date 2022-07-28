@@ -1,7 +1,7 @@
 $(document).ready(function () {
   
+  // Get new data and update html
   const getStateData = async () => {    
-    // Get new data and format html
     const html = await axios
       .get('/state')
       .then((state) => {
@@ -18,6 +18,24 @@ $(document).ready(function () {
     $(".check-data").html(html);
   };
 
-  $("button.status-btn").click(getStateData);
+  // Update config parameters and re-run scraper
+  const updateConfig = async () => {
+    console.log($("input[name='timer-input']").val());
 
+
+
+
+  };
+
+  
+  
+  // Event handlers
+  $("button.status-btn").click(getStateData);
+  $("button.config-btn").click(updateConfig);
+  
+  // Input field  value 'styling'
+  $("input[name='timer-input']").on('click focusin', function () {this.value = '';});
+
+
+// jquery END
 });

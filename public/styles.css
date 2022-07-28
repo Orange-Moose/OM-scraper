@@ -16,14 +16,14 @@ h3 {
   font-size: 1.4rem;
 }
 
-.status-btn {
+.status-btn, .config-btn {
   box-sizing: border-box;
   background-color: transparent;
   color: var(--dark-blue);
   border: 2px solid var(--green);
   border-radius: 0.3em;
   margin-bottom: 20px;
-  padding: 0.6em 1.2em;
+  padding: 0.5em 1em;
   font-size: .8rem;
   font-weight: 600;
   cursor: pointer;
@@ -37,3 +37,18 @@ h3 {
   background-position: 0;
   color: var(--white);
 }
+
+input[name='timer-input'] {
+  box-sizing: border-box;
+  width: 80px;
+  border: none;
+  border: 1px solid rgba(199, 196, 196, 0.8);
+  background: rgba(199, 196, 196, 0.1);
+  padding: 0.4em 0;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--dark-blue);
+  border-radius: 0.3em;
+}
+
