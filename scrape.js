@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import dotenv from 'dotenv';
+import dotenv, { config } from 'dotenv';
 dotenv.config({ path: 'variables.env' });
 import sendSMS from './twilio.js';
 
@@ -11,8 +11,20 @@ let state = {
   newUrls: [],
 };
 
-// TO-DO set config parameters
-let confing = {};
+// Scraper config parameters
+let scraperConfig = {
+  interval: 30
+};
+
+const updateConfig = (req, res) => {
+  console.log(req.body);
+  if(val && typeof(val) == 'number')  scraperConfig.interval = value;
+  return;
+};
+
+
+
+
 
 
 
@@ -121,9 +133,9 @@ const runNewCheck = async () => {
 
 runNewCheck();
 
-setInterval(() => {
+setTimeout(() => {
   runNewCheck();
-}, 1000 * 30);
+}, 1000 * scraperConfig.interval);
 
 
 export { runNewCheck, state };

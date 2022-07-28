@@ -1,3 +1,5 @@
+import axios from "axios";
+
 $(document).ready(function () {
   
   // Get new data and update html
@@ -20,11 +22,25 @@ $(document).ready(function () {
 
   // Update config parameters and re-run scraper
   const updateConfig = async () => {
-    console.log($("input[name='timer-input']").val());
+    const delay = $("input[name='timer-input']").val();
+    console.log(delay);
+
+    // Verify input to be number and less than 7 chars
+    if (delay && typeof (val) == 'number' && delay <= 100000) {
+      axios
+      .post('/update-config', { delay })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+    } else {
+      $("input[name='timer-input']").addClass('invalid');
+    }
 
 
+  };
 
-
+  // Add log to the DOM after every check
+  const updateLog = () => {
+    
   };
 
   
