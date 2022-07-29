@@ -2,7 +2,7 @@
 
 $(document).ready(function () {
   
-  // Get new data and update html
+  // Update DOM with fetched state data
   const getStateData = async () => {    
     const html = await axios
       .get('/state')
@@ -20,18 +20,16 @@ $(document).ready(function () {
     $(".check-data").html(html);
   };
 
-  // Update config parameters and re-run scraper
+  // Update scraper config parameters
   const updateConfig = () => {
     $("input[type='text']").css('border-color', 'rgba(199, 196, 196, 0.8)');
     const interval = parseInt($("input[name='timer-input']").val());
-    // console.log(`Delay: ${interval},  type: ${typeof(interval)}, les than 100k: ${interval <= 100000}`);
     
     // Verify input to be number and less than 7 chars
     if (interval && typeof(interval) == 'number' && interval <= 100000) {
       axios
         .post('/update-config', { interval })
         .then(res => {
-          console.log(res.data);
           // imediately set input value to the response value
           return $("input[name='timer-input']").val(res.data);
         })
@@ -42,15 +40,39 @@ $(document).ready(function () {
 
   };
 
-  // Add log to the DOM after every check
-  const updateLog = () => {
-    
+
+
+
+// FROM HERE: FIX showScraperLogs TO ACCEPT SCRAPE INTERVAL FROM STATE
+
+
+  // Add scraping log data to the DOM after every check (refresh after 20 checks)
+  const showScraperLogs = async () => {
+    console.log('Running showScraperLogs');
+    let checkCount = 20;
+    while(checkCount) {
+      checkCount--;
+      let logHtml = await axios
+        .get('/show-logs')
+        .then(state => {
+          return `
+            <p>Last check: ${state.data.date}. Url count: ${state.data.urlCount}. New url count: ${state.data.newUrls.length}.</p>
+          `;
+        })
+        .catch(err => console.log(err));
+      
+      $(".check-logs").prepend(logHtml);
+      if (!checkCount) $(".check-logs").html('');
+    } 
   };
 
   
   
   // Event handlers
-  $("button.status-btn").click(getStateData);
+  $("button.status-btn").click(() => {
+    getStateData(); 
+    showScraperLogs();
+  });
   $("button.config-btn").click(updateConfig);
   
   // Input field  value 'styling'

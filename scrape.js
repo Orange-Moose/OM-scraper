@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import dotenv, { config } from 'dotenv';
+import dotenv from 'dotenv';
 dotenv.config({ path: 'variables.env' });
 import sendSMS from './twilio.js';
 
@@ -20,6 +20,7 @@ const getWebsiteData = async (url = 'https://orange-moose.com/') => {
   let allData = [];
   let pagesToOpen = 2;
 
+  
   pagesToOpen = await page.evaluate(() => {
     // Note: (not-usable) selector from another project
     const nextBtn = document.querySelector('#auctionitems .pagination ul li.nextpage');
@@ -68,7 +69,6 @@ const getWebsiteData = async (url = 'https://orange-moose.com/') => {
 };
 
 const updateState = (newData) => {
-  // Update the state
   state.urlCount = newData.length;
   state.urlList = newData;
   state.lastcheck = Date.now();
@@ -79,7 +79,7 @@ const updateState = (newData) => {
 
 const countUniqueUrls = (curList, newList) => {
   let uniqueUrls;
-  // check only if the newList is bigger than the curList
+  
   if (curList.length > 0) {
     uniqueUrls = newList.filter(url => !curList.includes(url));
   } else {
@@ -98,7 +98,6 @@ const createMessage = (state) => {
 
 
 const runNewCheck = async () => {
-
   const newUrlList = await getWebsiteData();
   const uniqueUrlList = await countUniqueUrls(state.urlList, newUrlList);
   updateState(newUrlList);
@@ -120,28 +119,29 @@ const runNewCheck = async () => {
 let scraperConfig = {
   interval: 10,
   resetLoop: false,
-  loopId: null,
-  str: 'labas'
+  loopId: null
 };
 
 
-const runLoop = (reset) => {
-  if(reset) resetLoop();
-  
+const runScraper = () => {  
   scraperConfig.loopId = setInterval(() => {
+    if (scraperConfig.resetLoop) return resetScraper();
+      console.log('Running scraper');
       runNewCheck();
     }, 1000 * scraperConfig.interval);
 };
 
-const resetLoop = () => {
+const resetScraper = () => {
+  console.log('Reseting scraper');
+  scraperConfig.resetLoop = false;
   clearInterval(scraperConfig.loopId);
   scraperConfig.loopId = null;
-  return runLoop();
+  return runScraper();
 }
 
-runLoop(scraperConfig.resetLoop);
+runScraper();
 
 
 
 
-export { scraperConfig, runNewCheck, state, runLoop };
+export { scraperConfig, runNewCheck, state};
