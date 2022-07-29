@@ -120,7 +120,8 @@ const runNewCheck = async () => {
 let scraperConfig = {
   interval: 10,
   resetLoop: false,
-  loopId: null
+  loopId: null,
+  str: 'labas'
 };
 
 

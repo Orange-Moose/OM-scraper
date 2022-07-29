@@ -15,7 +15,7 @@ const getStateData = async (req, res) => {
 const updateConfig = (req, res) => {
   scraperConfig.interval = req.body.interval; // update loop interval
   scraperConfig.resetLoop = true; // triger clearInterval and re-launch
-  res.json(scraperConfig.interval);
+  res.json(scraperConfig.str);
 };
 
 
