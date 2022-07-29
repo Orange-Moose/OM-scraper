@@ -34,7 +34,7 @@ h3 {
   transition: background-position 300ms ease-in-out;
 }
 
-.status-btn:hover {
+.status-btn:hover, .config-btn:hover {
   background-position: 0;
   color: var(--white);
 }

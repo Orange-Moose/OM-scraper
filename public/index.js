@@ -24,13 +24,16 @@ $(document).ready(function () {
   const updateConfig = () => {
     $("input[type='text']").css('border-color', 'rgba(199, 196, 196, 0.8)');
     const delay = parseInt($("input[name='timer-input']").val());
-    console.log(`Delay: ${delay},  type: ${typeof(delay)}, les than 100k: ${delay <= 100000}`);
+    // console.log(`Delay: ${delay},  type: ${typeof(delay)}, les than 100k: ${delay <= 100000}`);
     
     // Verify input to be number and less than 7 chars
     if (delay && typeof(delay) == 'number' && delay <= 100000) {
       axios
         .post('/update-config', { delay })
-        .then(res => console.log(res.data))
+        .then(res => {
+          // imediately set input value to the response value
+          return $("input[name='timer-input']").val(res.data.interval);
+        })
         .catch(err => console.log(err));
     } else {
       $("input[type='text']").css('border-color', 'rgb(248, 131, 121)');
