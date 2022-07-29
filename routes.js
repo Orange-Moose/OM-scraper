@@ -3,9 +3,8 @@ const router = express.Router();
 import { scraperConfig, state, runNewCheck } from './scrape.js';
 
 
-
 const getHomePage = async (req, res) => {
-  let state = await runNewCheck();
+  // let state = await runNewCheck();
   res.render('index', { state, scraperConfig });
 };
 
@@ -17,9 +16,6 @@ const updateConfig = (req, res) => {
   scraperConfig.interval = req.body.delay;
   res.json(scraperConfig);
 };
-
-
-
 
 
 

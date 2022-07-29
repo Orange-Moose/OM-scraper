@@ -117,9 +117,12 @@ const runNewCheck = async () => {
   return state;
 };
 
-runNewCheck();
+//runNewCheck();
 
-setTimeout(() => {
+
+
+setInterval(() => {
+  console.log(scraperConfig.interval * 1000);
   runNewCheck();
 }, 1000 * scraperConfig.interval);
 
