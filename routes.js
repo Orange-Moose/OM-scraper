@@ -12,6 +12,10 @@ const getStateData = async (req, res) => {
   res.json(state);
 };
 
+const getConfigData = async (req, res) => {
+  res.json(scraperConfig.interval);
+};
+
 const updateConfig = (req, res) => {
   scraperConfig.interval = req.body.interval; // update loop interval
   scraperConfig.resetLoop = true; // update reset flag
@@ -23,7 +27,7 @@ const updateConfig = (req, res) => {
 //Endpoints
 router.get('/', getHomePage);
 router.get('/state', getStateData);
-router.get('/show-logs', getStateData);
+router.get('/config', getConfigData);
 router.post('/update-config', updateConfig);
 
 

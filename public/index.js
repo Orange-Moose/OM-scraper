@@ -2,23 +2,29 @@
 
 $(document).ready(function () {
   
-  // Update DOM with fetched state data
+  
+  
+  
+  
   const getStateData = async () => {    
-    const html = await axios
+    return await axios
       .get('/state')
-      .then((state) => {
-        return `
-          <p>Last check: ${state.data.date}.</p>
-          <p>Url count: ${state.data.urlCount}.</p>
-          <p>New url count: ${state.data.newUrls.length}.</p>
-          <p>New url list:
-          ${state.data.newUrls.join('\n')}</p>
-        `;
-      })
+      .then((state) => state.data)
       .catch(err => console.log(err));
-      
+  };
+
+  const updateStateDom = (data) => {
+    const html = `
+          <p>Last check: ${data.date}.</p>
+          <p>Url count: ${data.urlCount}.</p>
+          <p>New url count: ${data.newUrls.length}.</p>
+          <p>New url list:
+          ${data.newUrls.join('\n')}</p>
+        `;
     $(".check-data").html(html);
   };
+
+
 
   // Update scraper config parameters
   const updateConfig = () => {
@@ -43,35 +49,49 @@ $(document).ready(function () {
 
 
 
-// FROM HERE: FIX showScraperLogs TO ACCEPT SCRAPE INTERVAL FROM STATE
+
+// FIX FUNCTION BELOW__________________________
 
 
-  // Add scraping log data to the DOM after every check (refresh after 20 checks)
-  const showScraperLogs = async () => {
+  // Add scraping log data to the DOM after every check (max 20 checks)
+  const showScraperLogs = async (data) => {
     console.log('Running showScraperLogs');
-    let checkCount = 20;
-    while(checkCount) {
-      checkCount--;
-      let logHtml = await axios
-        .get('/show-logs')
-        .then(state => {
-          return `
-            <p>Last check: ${state.data.date}. Url count: ${state.data.urlCount}. New url count: ${state.data.newUrls.length}.</p>
-          `;
-        })
-        .catch(err => console.log(err));
-      
-      $(".check-logs").prepend(logHtml);
-      if (!checkCount) $(".check-logs").html('');
-    } 
+
+    let logLimit = 20;
+    let loopId;
+    let html = `
+      <p>Last check: ${data.date}. Url count: ${data.urlCount}. New url count: ${data.newUrls.length}.</p>
+    `;
+    let delay = await axios
+      .get('/config')
+      .then(interval => interval.data)
+      .catch(err => console.log(err));
+
+    console.log(html);
+    console.log(delay);
+
+    loopId = setInterval(() => {
+      while (logLimit) {
+        logLimit--;
+        console.log(logLimit);
+        $(".check-logs").prepend(html);
+      } 
+    }, 1000 * delay);
+
+    if (!logLimit) {
+      clearInterval(loopId);
+      $(".check-logs").html('');
+    };
+
   };
 
   
   
   // Event handlers
-  $("button.status-btn").click(() => {
-    getStateData(); 
-    showScraperLogs();
+  $("button.status-btn").click(async () => {
+    const data = await getStateData();
+    updateStateDom(data);
+    showScraperLogs(data);
   });
   $("button.config-btn").click(updateConfig);
   

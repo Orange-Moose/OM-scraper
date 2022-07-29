@@ -3,12 +3,20 @@ import dotenv from 'dotenv';
 dotenv.config({ path: 'variables.env' });
 import sendSMS from './twilio.js';
 
+// Scraper data
 let state = {
   urlCount: 0,
   lastcheck: false,
   date: '',
   urlList: [],
   newUrls: [],
+};
+
+// Scraper config
+let scraperConfig = {
+  interval: 10,
+  resetLoop: false,
+  loopId: null
 };
 
 
@@ -112,16 +120,6 @@ const runNewCheck = async () => {
   
   return state;
 };
-
-
-
-// Scraper config parameters
-let scraperConfig = {
-  interval: 10,
-  resetLoop: false,
-  loopId: null
-};
-
 
 const runScraper = () => {  
   scraperConfig.loopId = setInterval(() => {
