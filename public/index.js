@@ -29,9 +29,9 @@ $(document).ready(function () {
     // Verify input to be number and less than 7 chars
     if (delay && typeof(delay) == 'number' && delay <= 100000) {
       axios
-      .post('/update-config', { delay })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+        .post('/update-config', { delay })
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err));
     } else {
       $("input[type='text']").css('border-color', 'rgb(248, 131, 121)');
     }

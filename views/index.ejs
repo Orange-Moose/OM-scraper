@@ -13,7 +13,7 @@
   <h3 classs="title">Web Scraper</h3>
   <button class="status-btn" type="button">Get status</button> 
   <button class="config-btn" type="button">Reset timer</button>
-  <input type="text" id="timer-input"  class= "invalid" name="timer-input" title="Enter amount of seconds" pattern="[0-9]{6}" value="90">
+  <input type="text" id="timer-input"  class= "invalid" name="timer-input" title="Enter amount of seconds" pattern="[0-9]{6}" value="<%= scraperConfig.interval %>">
 
   <p><strong>Last check data:</strong></p>
   <div class="check-data">

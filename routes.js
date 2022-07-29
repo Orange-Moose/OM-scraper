@@ -6,7 +6,7 @@ import { scraperConfig, state, runNewCheck } from './scrape.js';
 
 const getHomePage = async (req, res) => {
   let state = await runNewCheck();
-  res.render('index', { state });
+  res.render('index', { state, scraperConfig });
 };
 
 const getStateData = async (req, res) => {
@@ -14,9 +14,8 @@ const getStateData = async (req, res) => {
 };
 
 const updateConfig = (req, res) => {
-  console.log(req.body);
-  // if(val && typeof(val) == 'number')  scraperConfig.interval = val;
-  res.json(req.body);
+  scraperConfig.interval = req.body.delay;
+  res.json(scraperConfig);
 };
 
 
@@ -27,7 +26,7 @@ const updateConfig = (req, res) => {
 //Endpoints
 router.get('/', getHomePage);
 router.get('/state', getStateData);
-router.post('/update-config', updateConfig(50));
+router.post('/update-config', updateConfig);
 
 
 

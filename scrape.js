@@ -16,16 +16,6 @@ let scraperConfig = {
   interval: 30
 };
 
-
-
-
-
-
-
-
-
-
-
 const getWebsiteData = async (url = 'https://orange-moose.com/') => {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
