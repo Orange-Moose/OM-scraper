@@ -11,10 +11,7 @@ let state = {
   newUrls: [],
 };
 
-// Scraper config parameters
-let scraperConfig = {
-  interval: 30
-};
+
 
 const getWebsiteData = async (url = 'https://orange-moose.com/') => {
   const browser = await puppeteer.launch({ headless: true });
@@ -117,14 +114,33 @@ const runNewCheck = async () => {
   return state;
 };
 
-//runNewCheck();
+
+
+// Scraper config parameters
+let scraperConfig = {
+  interval: 10,
+  resetLoop: false,
+  loopId: null
+};
+
+
+const runLoop = (reset) => {
+  if(reset) resetLoop();
+  
+  scraperConfig.loopId = setInterval(() => {
+      runNewCheck();
+    }, 1000 * scraperConfig.interval);
+};
+
+const resetLoop = () => {
+  clearInterval(scraperConfig.loopId);
+  scraperConfig.loopId = null;
+  return runLoop();
+}
+
+runLoop(scraperConfig.resetLoop);
 
 
 
-setInterval(() => {
-  console.log(scraperConfig.interval * 1000);
-  runNewCheck();
-}, 1000 * scraperConfig.interval);
 
-
-export { scraperConfig, runNewCheck, state };
+export { scraperConfig, runNewCheck, state, runLoop };

@@ -4,7 +4,7 @@ import { scraperConfig, state, runNewCheck } from './scrape.js';
 
 
 const getHomePage = async (req, res) => {
-  // let state = await runNewCheck();
+  let state = await runNewCheck();
   res.render('index', { state, scraperConfig });
 };
 
@@ -13,8 +13,9 @@ const getStateData = async (req, res) => {
 };
 
 const updateConfig = (req, res) => {
-  scraperConfig.interval = req.body.delay;
-  res.json(scraperConfig);
+  scraperConfig.interval = req.body.interval; // update loop interval
+  scraperConfig.resetLoop = true; // triger clearInterval and re-launch
+  res.json(scraperConfig.interval);
 };
 
 
