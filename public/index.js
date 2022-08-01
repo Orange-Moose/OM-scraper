@@ -2,9 +2,10 @@
 
 $(document).ready(function () {
   
-  
-  
-  
+  // Logs container DOM updating loop from showScraperLogs()
+  let logLoopId;
+  //How many logs to display to the user before refreshing.
+  const logCount = 20;
   
   const getStateData = async () => {    
     return await axios
@@ -24,10 +25,8 @@ $(document).ready(function () {
     $(".check-data").html(html);
   };
 
-
-
   // Update scraper config parameters
-  const updateConfig = () => {
+  const updateConfig = (loopId) => {
     $("input[type='text']").css('border-color', 'rgba(199, 196, 196, 0.8)');
     const interval = parseInt($("input[name='timer-input']").val());
     
@@ -36,7 +35,11 @@ $(document).ready(function () {
       axios
         .post('/update-config', { interval })
         .then(res => {
-          // imediately set input value to the response value
+          // Restart loging to the DOM
+          clearInterval(loopId);
+          $(".check-logs").html('Resetting timer...');
+          showScraperLogs(logCount, res.data);
+          // update input value to the response value
           return $("input[name='timer-input']").val(res.data);
         })
         .catch(err => console.log(err));
@@ -44,59 +47,58 @@ $(document).ready(function () {
       $("input[type='text']").css('border-color', 'rgb(248, 131, 121)');
     }
 
+
+
   };
 
 
-
-
-
-// FIX FUNCTION BELOW__________________________
-
-
-  // Add scraping log data to the DOM after every check (max 20 checks)
-  const showScraperLogs = async (data) => {
-    console.log('Running showScraperLogs');
-
-    let logLimit = 20;
+  // Add scraping log data to the DOM after every check
+  const showScraperLogs = async (logCount, delay) => {
+    let logLimit = logCount;
     let loopId;
-    let html = `
+
+    // If no delay value was passed, fetch new one from /config
+    if(!delay) delay = await axios
+        .get('/config')
+        .then(interval => interval.data)
+        .catch(err => console.log(err));
+    
+    $(".check-logs").html('Waiting for new logs...');
+    
+    loopId = setInterval( async () => {
+
+      let data = await getStateData();
+      let html = `
       <p>Last check: ${data.date}. Url count: ${data.urlCount}. New url count: ${data.newUrls.length}.</p>
-    `;
-    let delay = await axios
-      .get('/config')
-      .then(interval => interval.data)
-      .catch(err => console.log(err));
+      `;
 
-    console.log(html);
-    console.log(delay);
+      $(".check-logs").prepend(html);
+      
+      logLimit--; 
 
-    loopId = setInterval(() => {
-      while (logLimit) {
-        logLimit--;
-        console.log(logLimit);
-        $(".check-logs").prepend(html);
-      } 
+      if(logLimit < 0) {
+        $(".check-logs").html('');
+        logLimit = logCount;
+      };
     }, 1000 * delay);
 
-    if (!logLimit) {
-      clearInterval(loopId);
-      $(".check-logs").html('');
-    };
+    // Set refference of setInterval
+    logLoopId = loopId;
 
   };
 
-  
-  
   // Event handlers
   $("button.status-btn").click(async () => {
     const data = await getStateData();
     updateStateDom(data);
-    showScraperLogs(data);
   });
-  $("button.config-btn").click(updateConfig);
+
+  $("button.config-btn").click(() => updateConfig(logLoopId));
   
   // Input field  value 'styling'
   $("input[name='timer-input']").on('click focusin', function () {this.value = '';});
+
+  showScraperLogs(logCount);
 
 
 // jquery END

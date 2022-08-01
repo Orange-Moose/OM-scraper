@@ -5,10 +5,12 @@
   --dark-blue: #2c3e50;
   --green: #2ecc71;
   --red: rgb(248, 131, 121);
+  --body-padding: 20px;
 }
 
 body {
-  margin: 20px;
+  box-sizing: border-box;
+  padding: var(--body-padding);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 13px;
 }
@@ -57,3 +59,13 @@ input[name='timer-input'] {
   background: var(--red);
 }
 
+
+.logs-container {
+  width: 500px;
+  max-width: calc(90vw - var(--body-padding)*2);
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid rgba(199, 196, 196, 0.8);
+  border-radius: 0.3em;
+  background:rgba(199, 196, 196, 0.1);
+}
