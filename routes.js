@@ -17,12 +17,10 @@ const getConfigData = async (req, res) => {
 };
 
 const updateConfig = (req, res) => {
-  scraperConfig.interval = req.body.interval; // update loop interval
-  scraperConfig.resetLoop = true; // update reset flag
+  scraperConfig.interval = req.body.interval;
+  scraperConfig.resetLoop = true;
   res.json(scraperConfig.interval);
 };
-
-
 
 //Endpoints
 router.get('/', getHomePage);

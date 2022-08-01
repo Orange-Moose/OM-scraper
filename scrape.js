@@ -14,64 +14,29 @@ let state = {
 
 // Scraper config
 let scraperConfig = {
-  interval: 10,
+  interval: 20,
   resetLoop: false,
   loopId: null
 };
-
-
 
 const getWebsiteData = async (url = 'https://orange-moose.com/') => {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   await page.goto(url);
   let allData = [];
-  let pagesToOpen = 2;
 
-  
-  pagesToOpen = await page.evaluate(() => {
-    // Note: (not-usable) selector from another project
-    const nextBtn = document.querySelector('#auctionitems .pagination ul li.nextpage');
-    if (nextBtn) return 2;
-    return 0;
-  });
+  const data = await page.evaluate(() => {
+    let urlList = [];
+    const items = document.querySelectorAll('nav ul li a');
 
-  if (pagesToOpen) {
-    while (pagesToOpen != 0) {
-
-      const data = await page.evaluate(() => {
-        let urlList = [];
-        const items = document.querySelectorAll('nav ul li a');
-
-        items.forEach(item => {
-          urlList.push(item.href);
-        });
-        return urlList;
-      });
-
-      const [response] = await Promise.all([
-        page.waitForNavigation(),
-        // Note: (not-usable) selector from another project
-        page.click('#auctionitems .pagination ul li.nextpage'),
-      ]);
-
-      allData = allData.concat(data);
-      --pagesToOpen;
-    }
-  } else {
-    const data = await page.evaluate(() => {
-      let urlList = [];
-      const items = document.querySelectorAll('nav ul li a');
-
-      items.forEach(item => {
-        urlList.push(item.href);
-      });
-      return urlList
+    items.forEach(item => {
+      urlList.push(item.href);
     });
-
-    allData = data;
-  }
-
+    
+    return urlList;
+  });
+  
+  allData = data;
   await browser.close();
   return allData;
 };
@@ -104,7 +69,6 @@ const createMessage = (state) => {
   return `New projects: ${state.newUrls.length}. Links:\n ${state.newUrls.join('\n')}`;
 };
 
-
 const runNewCheck = async () => {
   const newUrlList = await getWebsiteData();
   const uniqueUrlList = await countUniqueUrls(state.urlList, newUrlList);
@@ -121,6 +85,7 @@ const runNewCheck = async () => {
   return state;
 };
 
+
 const runScraper = () => {  
   scraperConfig.loopId = setInterval(() => {
     if (scraperConfig.resetLoop) return resetScraper();
@@ -135,11 +100,8 @@ const resetScraper = () => {
   clearInterval(scraperConfig.loopId);
   scraperConfig.loopId = null;
   return runScraper();
-}
+};
 
 runScraper();
 
-
-
-
-export { scraperConfig, runNewCheck, state};
+export { scraperConfig, runNewCheck, state };

@@ -59,7 +59,6 @@ input[name='timer-input'] {
   background: var(--red);
 }
 
-
 .logs-container {
   width: 500px;
   max-width: calc(90vw - var(--body-padding)*2);

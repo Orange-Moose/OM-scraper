@@ -1,5 +1,3 @@
-// import axios from "axios";
-
 $(document).ready(function () {
   
   // Logs container DOM updating loop from showScraperLogs()
@@ -46,9 +44,6 @@ $(document).ready(function () {
     } else {
       $("input[type='text']").css('border-color', 'rgb(248, 131, 121)');
     }
-
-
-
   };
 
 
@@ -66,14 +61,12 @@ $(document).ready(function () {
     $(".check-logs").html('Waiting for new logs...');
     
     loopId = setInterval( async () => {
-
       let data = await getStateData();
       let html = `
       <p>Last check: ${data.date}. Url count: ${data.urlCount}. New url count: ${data.newUrls.length}.</p>
       `;
 
       $(".check-logs").prepend(html);
-      
       logLimit--; 
 
       if(logLimit < 0) {
@@ -84,7 +77,6 @@ $(document).ready(function () {
 
     // Set refference of setInterval
     logLoopId = loopId;
-
   };
 
   // Event handlers
@@ -98,6 +90,7 @@ $(document).ready(function () {
   // Input field  value 'styling'
   $("input[name='timer-input']").on('click focusin', function () {this.value = '';});
 
+  // Start loging to DOM on pageload
   showScraperLogs(logCount);
 
 
